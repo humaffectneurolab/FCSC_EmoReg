@@ -194,7 +194,6 @@
 % nearestSPD  http://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd
                                              
 %% ICA component derived from average weight of coomponents across 1000 runs for each subject
-
 Nica=4;
 
 ERmat = zeros(99, Nica);
@@ -205,10 +204,10 @@ for q = 1:99
     end
 end
 
-%% setup confounds matrix
- conf=palm_inormal([ covar ]);    % Gaussianise
- ERb=ERpca3-conf*(pinv(conf)*ERpca3)
- ERm=ERmat-conf*(pinv(conf)*ERmat)
+%% setup confounds matrix and regress out from behavioral and neural data
+conf=palm_inormal([ covar ]);    % Gaussianise
+ERb=ERpca3-conf*(pinv(conf)*ERpca3)
+ERm=ERmat-conf*(pinv(conf)*ERmat)
 
 %% CCA
 [grotA,grotB,grotR,grotU,grotV,grotstats]=canoncorr(ERm,ERb);
@@ -217,7 +216,6 @@ Nperm=10000;
 PAPset=palm_quickperms(99, ones(99,1), Nperm); 
 
 %%% CCA permutation testing
-
 Nkeep=3;
                                              
 grotRp=zeros(Nperm,Nkeep); clear grotRpval;
